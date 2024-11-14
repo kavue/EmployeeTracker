@@ -8,7 +8,9 @@ declare module 'asciiart-logo' {
     borderColor?: string;
     logoColor?: string;
     textColor?: string;
-  }): any;
-
-  export function render(options: LogoConfig): void;
+  }): {
+    render: () => string;
+    emptyLine: () => any;
+    right: (text: string) => any;
+  };
 }
