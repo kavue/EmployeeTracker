@@ -113,7 +113,10 @@ export const startApp = async () => {
           type: 'list',
           name: 'managerId',
           message: 'Select the employee\'s manager:',
-          choices: await getManagerChoices(),
+          choices: [
+            { name: 'None', value: null },
+            ...(await getManagerChoices())
+          ],
         },
       ]);
       await addEmployee(firstName, lastName, roleId, managerId);
