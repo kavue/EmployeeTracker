@@ -14,8 +14,7 @@ export const addDepartment = async (departmentName: string) => {
 // Role-related queries
 export const getAllRoles = async () => {
   const result = await pool.query(`
-    SELECT role.id AS role_id, role.title, role.salary, department.name AS department_name
-    FROM role
+    SELECT role.id, role.title, role.salary, department.name AS department FROM role
     JOIN department ON role.department_id = department.id
   `);
   return result.rows;
@@ -28,9 +27,24 @@ export const addRole = async (roleName: string, salary: number, departmentId: nu
 
 // Employee-related queries
 export const getAllEmployees = async () => {
-  const result = await pool.query('SELECT id, first_name, last_name, role_id, manager_id FROM employee');
+  const result = await pool.query(`
+    SELECT 
+      employee.id,
+      employee.first_name,
+      employee.last_name,
+      role.id AS role_id,
+      role.title AS title,
+      department.name AS department,
+      role.salary,
+      manager.first_name || ' ' || manager.last_name AS manager
+    FROM employee
+    JOIN role ON employee.role_id = role.id
+    JOIN department ON role.department_id = department.id
+    LEFT JOIN employee AS manager ON employee.manager_id = manager.id
+  `);
   return result.rows;
 };
+
 
 export const addEmployee = async (firstName: string, lastName: string, roleId: number, managerId: number | null) => {
   const result = await pool.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4) RETURNING *', [firstName, lastName, roleId, managerId]);

@@ -10,7 +10,10 @@ export const addDepartment = async (departmentName) => {
 };
 // Role-related queries
 export const getAllRoles = async () => {
-    const result = await pool.query('SELECT id, title, salary, department_id FROM role');
+    const result = await pool.query(`
+    SELECT role.id, role.title, role.salary, department.name AS department FROM role
+    JOIN department ON role.department_id = department.id
+  `);
     return result.rows;
 };
 export const addRole = async (roleName, salary, departmentId) => {
@@ -19,7 +22,21 @@ export const addRole = async (roleName, salary, departmentId) => {
 };
 // Employee-related queries
 export const getAllEmployees = async () => {
-    const result = await pool.query('SELECT id, first_name, last_name, role_id, manager_id FROM employee');
+    const result = await pool.query(`
+    SELECT 
+      employee.id,
+      employee.first_name,
+      employee.last_name,
+      role.id AS role_id,
+      role.title AS title,
+      department.name AS department,
+      role.salary,
+      manager.first_name || ' ' || manager.last_name AS manager
+    FROM employee
+    JOIN role ON employee.role_id = role.id
+    JOIN department ON role.department_id = department.id
+    LEFT JOIN employee AS manager ON employee.manager_id = manager.id
+  `);
     return result.rows;
 };
 export const addEmployee = async (firstName, lastName, roleId, managerId) => {

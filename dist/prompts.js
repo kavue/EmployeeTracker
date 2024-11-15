@@ -26,11 +26,11 @@ export const startApp = async () => {
             break;
         case 'View all roles':
             const roles = await getAllRoles();
-            displayTable(roles, ['id', 'title', 'salary', 'department_id']);
+            displayTable(roles, ['id', 'title', 'salary', 'department']);
             break;
         case 'View all employees':
             const employees = await getAllEmployees();
-            displayTable(employees, ['id', 'first_name', 'last_name', 'role_id', 'manager_id']);
+            displayTable(employees, ['id', 'first_name', 'last_name', 'title', 'department', 'salary', 'manager']);
             break;
         case 'Add a department':
             const { departmentName } = await inquirer.prompt([
