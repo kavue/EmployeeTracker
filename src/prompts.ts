@@ -1,23 +1,23 @@
 import inquirer from 'inquirer';
 import { getAllDepartments, getAllRoles, getAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole } from './controllers.js';
-import { displayTable, getDepartmentChoices, getRoleChoices, getManagerChoices, getEmployeeChoices, validateSalary } from './utils.js'; 
+import { displayTable, getDepartmentChoices, getRoleChoices, getManagerChoices, getEmployeeChoices, validateSalary } from './utils.js';
 import logo from 'asciiart-logo';
 
 console.log(
   logo({
-      name: 'Employee Mangager',
-      font: 'Speed',
-      lineChars: 10,
-      padding: 2,
-      margin: 3,
-      borderColor: 'white',
-      logoColor: 'white',
-      textColor: 'white',
+    name: 'Employee Mangager',
+    font: 'Speed',
+    lineChars: 10,
+    padding: 2,
+    margin: 3,
+    borderColor: 'white',
+    logoColor: 'white',
+    textColor: 'white',
   })
-  .emptyLine()
-  .right('version 3.7.123')
-  .emptyLine()
-  .render()
+    .emptyLine()
+    .right('version 3.7.123')
+    .emptyLine()
+    .render()
 );
 
 export const startApp = async () => {
@@ -43,7 +43,7 @@ export const startApp = async () => {
     case 'View all departments':
       const departments = await getAllDepartments();
       displayTable(departments, ['id', 'name']);
-      break;    
+      break;
 
     case 'View all roles':
       const roles = await getAllRoles();

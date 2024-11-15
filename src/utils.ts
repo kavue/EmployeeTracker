@@ -1,4 +1,4 @@
-import pool from './db.js';  
+import pool from './db.js';
 
 // Function to validate salary input
 export const validateSalary = (input: string) => {
