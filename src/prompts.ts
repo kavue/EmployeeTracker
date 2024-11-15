@@ -1,10 +1,7 @@
-// src/prompts.ts
 import inquirer from 'inquirer';
-import pool from './db';
-import { displayTable, getDepartmentChoices, getRoleChoices, getManagerChoices, getEmployeeChoices, validateSalary } from './utils';
-import { addDepartment, addRole, addEmployee, updateEmployeeRole, getAllDepartments, getAllRoles, getAllEmployees } from './controllers';
+import { getAllDepartments, getAllRoles, getAllEmployees, addDepartment, addRole, addEmployee, updateEmployeeRole } from './controllers.js';
+import { displayTable, getDepartmentChoices, getRoleChoices, getManagerChoices, getEmployeeChoices, validateSalary } from './utils.js'; 
 
-// Start the CLI app
 export const startApp = async () => {
   const { action } = await inquirer.prompt([
     {
@@ -19,24 +16,25 @@ export const startApp = async () => {
         'Add a role',
         'Add an employee',
         'Update an employee role',
+        'Exit',
       ],
     },
   ]);
 
   switch (action) {
     case 'View all departments':
-      const departments = await pool.query(getAllDepartments);
-      displayTable(departments.rows, ['ID', 'Department Name']);
-      break;
+      const departments = await getAllDepartments();
+      displayTable(departments, ['id', 'name']);
+      break;    
 
     case 'View all roles':
-      const roles = await pool.query(getAllRoles);
-      displayTable(roles.rows, ['Role ID', 'Role Name', 'Department', 'Salary']);
+      const roles = await getAllRoles();
+      displayTable(roles, ['id', 'title', 'salary', 'department_id']);
       break;
 
     case 'View all employees':
-      const employees = await pool.query(getAllEmployees);
-      displayTable(employees.rows, ['ID', 'First Name', 'Last Name', 'Role', 'Department', 'Salary', 'Manager']);
+      const employees = await getAllEmployees();
+      displayTable(employees, ['id', 'first_name', 'last_name', 'role_id', 'manager_id']);
       break;
 
     case 'Add a department':
@@ -47,7 +45,7 @@ export const startApp = async () => {
           message: 'Enter the department name:',
         },
       ]);
-      await pool.query(addDepartment, [departmentName]);
+      await addDepartment(departmentName);
       console.log('Department added!');
       break;
 
@@ -62,7 +60,7 @@ export const startApp = async () => {
           type: 'input',
           name: 'salary',
           message: 'Enter the salary:',
-          validate: validateSalary,  // Ensures the salary input is a positive number
+          validate: validateSalary,
         },
         {
           type: 'list',
@@ -71,7 +69,7 @@ export const startApp = async () => {
           choices: await getDepartmentChoices(),
         },
       ]);
-      await pool.query(addRole, [roleName, salary, departmentId]);
+      await addRole(roleName, salary, departmentId);
       console.log('Role added!');
       break;
 
@@ -100,7 +98,7 @@ export const startApp = async () => {
           choices: await getManagerChoices(),
         },
       ]);
-      await pool.query(addEmployee, [firstName, lastName, roleId, managerId]);
+      await addEmployee(firstName, lastName, roleId, managerId);
       console.log('Employee added!');
       break;
 
@@ -119,11 +117,18 @@ export const startApp = async () => {
           choices: await getRoleChoices(),
         },
       ]);
-      await pool.query(updateEmployeeRole, [employeeId, newRoleId]);
+      await updateEmployeeRole(employeeId, newRoleId);
       console.log('Employee role updated!');
+      break;
+
+    case 'Exit':
+      console.log('Goodbye!');
+      process.exit(0);
       break;
 
     default:
       break;
   }
+
+  startApp();
 };
