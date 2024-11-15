@@ -2,6 +2,8 @@
 
 A command-line application for managing a company's employee database. The application is built with **Node.js**, **Inquirer**, and **PostgreSQL**, allowing users to interact with a database to track and manage employee details.
 
+<a href="https://drive.google.com/file/d/1an4jY0pU1LvmpmHQt9sAIYy9r-ixlglT/view?usp=drive_link">Walkthrough Video</a>
+
 ## Table of Contents
 - [Description](#description)
 - [Technologies Used](#technologies-used)
